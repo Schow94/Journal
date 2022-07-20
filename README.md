@@ -1,17 +1,7 @@
 # project4
 
-A new Flutter project.
+## Prompt
 
-## Getting Started
+Demonstrate proficiency of prior material, and challenge yourself to demonstrate how to apply new concepts to meet functional requirements. Build a journaling application. Practice applying the concepts of navigation, forms, lists and data persistence. Enhance your application with adaptivity, dynamic theme switching, third-party packages for persistence, and encounter challenges of state management.
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-# Journal
+## What the application does
