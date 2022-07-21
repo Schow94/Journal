@@ -15,11 +15,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Journal',
-        theme: ThemeData(
-          primarySwatch: Colors.green,
-          textTheme: const TextTheme(),
+      title: 'Journal',
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+        textTheme: const TextTheme(
+          headline6: TextStyle(fontSize: 17.0),
         ),
-        routes: routes);
+      ),
+      routes: routes,
+    );
   }
 }

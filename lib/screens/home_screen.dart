@@ -8,8 +8,22 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Journal Entries'),
-      ),
+          automaticallyImplyLeading: false,
+          title: const Text('Journal Entries'),
+          actions: [
+            Builder(
+              builder: (BuildContext context) {
+                return IconButton(
+                  onPressed: () {
+                    Scaffold.of(context).openEndDrawer();
+                  },
+                  icon: const Icon(
+                    Icons.settings,
+                  ),
+                );
+              },
+            ),
+          ]),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           goToAddEntryScreen(context);
@@ -19,6 +33,36 @@ class Home extends StatelessWidget {
       ),
       body: const SingleChildScrollView(
         child: JournalEntriesList(),
+      ),
+      endDrawer: Drawer(
+        child: ListView(
+          padding: const EdgeInsets.all(0),
+          children: [
+            const SizedBox(
+              height: 90.0,
+              child: DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.green,
+                ),
+                child: Text('Settings'),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                const Text('Dark Mode'),
+                Switch(
+                  onChanged: (value) {
+                    // Do something
+                  },
+                  value: false,
+                  // activeTrackColor: Colors.lightGreenAccent,
+                  // activeColor: Colors.green,
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
