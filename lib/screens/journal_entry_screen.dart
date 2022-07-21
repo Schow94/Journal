@@ -84,6 +84,9 @@ class JournalEntryScreen extends StatelessWidget {
     );
   }
 
+  /*
+    - Go back to previous/Home screen
+  */
   void goBack(context) {
     Navigator.pop(context);
   }

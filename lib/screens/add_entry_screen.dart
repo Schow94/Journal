@@ -8,6 +8,16 @@ class AddEntry extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add new Journal Entry'),
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              onPressed: () {
+                goBack(context);
+              },
+              icon: const Icon(Icons.arrow_back),
+            );
+          },
+        ),
         actions: [
           Builder(
             builder: (BuildContext context) {
@@ -23,84 +33,87 @@ class AddEntry extends StatelessWidget {
           ),
         ],
       ),
-      body: Container(
-        margin: const EdgeInsets.all(40),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            TextFormField(
-              autofocus: true,
-              decoration: const InputDecoration(
-                labelText: 'Title',
-                border: OutlineInputBorder(),
+      body: FractionallySizedBox(
+        child: Container(
+          height: getHeight(context),
+          margin: const EdgeInsets.all(40),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              TextFormField(
+                autofocus: true,
+                decoration: const InputDecoration(
+                  labelText: 'Title',
+                  border: OutlineInputBorder(),
+                ),
+                onSaved: (value) {
+                  // Save value in state
+                },
+                validator: (String? value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter a title';
+                  } else {
+                    return null;
+                  }
+                },
               ),
-              onSaved: (value) {
-                // Save value in state
-              },
-              validator: (String? value) {
-                if (value!.isEmpty) {
-                  return 'Please enter a title';
-                } else {
-                  return null;
-                }
-              },
-            ),
-            TextFormField(
-              autofocus: true,
-              decoration: const InputDecoration(
-                labelText: 'Body',
-                border: OutlineInputBorder(),
+              TextFormField(
+                autofocus: true,
+                decoration: const InputDecoration(
+                  labelText: 'Body',
+                  border: OutlineInputBorder(),
+                ),
+                onSaved: (value) {
+                  // Save value in state
+                },
+                validator: (String? value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter a title';
+                  } else {
+                    return null;
+                  }
+                },
               ),
-              onSaved: (value) {
-                // Save value in state
-              },
-              validator: (String? value) {
-                if (value!.isEmpty) {
-                  return 'Please enter a title';
-                } else {
-                  return null;
-                }
-              },
-            ),
-            TextFormField(
-              autofocus: true,
-              decoration: const InputDecoration(
-                labelText: 'Rating',
-                border: OutlineInputBorder(),
+              TextFormField(
+                autofocus: true,
+                decoration: const InputDecoration(
+                  labelText: 'Rating',
+                  border: OutlineInputBorder(),
+                ),
+                onSaved: (value) {
+                  // Save value in state
+                },
+                validator: (String? value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter a title';
+                  } else {
+                    return null;
+                  }
+                },
               ),
-              onSaved: (value) {
-                // Save value in state
-              },
-              validator: (String? value) {
-                if (value!.isEmpty) {
-                  return 'Please enter a title';
-                } else {
-                  return null;
-                }
-              },
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.grey, // Background color
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.grey, // Background color
+                    ),
+                    child: const Text('Cancel'),
+                    onPressed: () {
+                      goToHomeScreen(context);
+                    },
                   ),
-                  child: const Text('Cancel'),
-                  onPressed: () {
-                    goToHomeScreen(context);
-                  },
-                ),
-                ElevatedButton(
-                  child: const Text('Save'),
-                  onPressed: () {
-                    saveEntry(context);
-                  },
-                ),
-              ],
-            ),
-          ],
+                  ElevatedButton(
+                    child: const Text('Save'),
+                    onPressed: () {
+                      saveEntry(context);
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
       endDrawer: Drawer(
@@ -137,6 +150,17 @@ class AddEntry extends StatelessWidget {
   }
 
   /*
+    - Dynamically set height of FractionallySizedBox() based on screen orientation
+  */
+  double getHeight(context) {
+    if (MediaQuery.of(context).orientation == Orientation.portrait) {
+      return MediaQuery.of(context).size.height * 0.5;
+    } else {
+      return MediaQuery.of(context).size.height * 1;
+    }
+  }
+
+  /*
     Navigate to AddEntry Screen
   */
   void goToHomeScreen(BuildContext context) {
@@ -150,5 +174,12 @@ class AddEntry extends StatelessWidget {
     Navigator.of(context).pop();
 
     // Save form data to state
+  }
+
+  /*
+    - Go back to previous/Home screen
+  */
+  void goBack(context) {
+    Navigator.pop(context);
   }
 }
