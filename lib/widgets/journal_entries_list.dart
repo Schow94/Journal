@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import '../models/screen_class.dart';
+import '../models/entry.dart';
 
 class JournalEntriesList extends StatelessWidget {
-  const JournalEntriesList({Key? key}) : super(key: key);
+  final String name;
+  final List<Entry> entries;
+
+  const JournalEntriesList(
+      {Key? key, required this.name, required this.entries})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +33,20 @@ class JournalEntriesList extends StatelessWidget {
                   'Journal Entry #1',
                   style: Theme.of(context).textTheme.headline6,
                 ),
+                // ListView.builder(
+                //   itemCount: entries.length,
+                //   itemBuilder: (context, index) {
+                //     return ListTile(
+                //       title: Text(entries[index].title),
+                //     );
+                //   },
+                // ),
+                // This is state passed down from home_screen
+                Text(
+                  entries.first.title,
+                  style: Theme.of(context).textTheme.headline6,
+                ),
+
                 const Text('Wednesday July 20, 2022'),
                 const Divider(
                   height: 20,

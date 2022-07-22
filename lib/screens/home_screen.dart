@@ -1,8 +1,26 @@
 import 'package:flutter/material.dart';
 import '../widgets/journal_entries_list.dart';
+import '../models/entry.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  var name = '';
+  List<Entry> entries = [];
+
+  void initState() {
+    super.initState();
+    name = 'Hello';
+    entries = [
+      Entry(title: 'Title 1', content: 'Content1'),
+      Entry(title: 'Title 2', content: 'Content2'),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +50,8 @@ class Home extends StatelessWidget {
         backgroundColor: Colors.green,
         child: const Icon(Icons.add),
       ),
-      body: const SingleChildScrollView(
-        child: JournalEntriesList(),
+      body: SingleChildScrollView(
+        child: JournalEntriesList(name: name, entries: entries),
       ),
       endDrawer: Drawer(
         child: ListView(

@@ -19,5 +19,5 @@ void main() {
     DeviceOrientation.portraitUp
   ]);
 
-  runApp(const MyApp());
+  runApp(const App());
 }

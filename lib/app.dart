@@ -3,9 +3,14 @@ import 'screens/add_entry_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/journal_entry_screen.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class App extends StatefulWidget {
+  const App({Key? key}) : super(key: key);
 
+  @override
+  State<App> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
   static final routes = {
     '/': (context) => const Home(),
     'addentry': (context) => const AddEntry(),
