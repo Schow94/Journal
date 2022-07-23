@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import '../models/add_entry_screen_arg.dart';
 
 class AddEntry extends StatelessWidget {
   const AddEntry({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // Might be able to use  JournalEntry as ScreenArguments
+    final screenargs =
+        ModalRoute.of(context)?.settings.arguments as AddEntryScreenArguments;
+    final VoidCallback addEntry = screenargs.addEntry;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add new Journal Entry'),
@@ -86,7 +92,7 @@ class AddEntry extends StatelessWidget {
                 },
                 validator: (String? value) {
                   if (value!.isEmpty) {
-                    return 'Please enter a title';
+                    return 'Please enter a rating';
                   } else {
                     return null;
                   }
@@ -107,6 +113,7 @@ class AddEntry extends StatelessWidget {
                   ElevatedButton(
                     child: const Text('Save'),
                     onPressed: () {
+                      addEntry();
                       saveEntry(context);
                     },
                   ),

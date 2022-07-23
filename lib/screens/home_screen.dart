@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:project4/models/add_entry_screen_arg.dart';
 import '../widgets/journal_entries_list.dart';
 import '../models/entry.dart';
+
+import '../models/add_entry_screen_arg.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -10,16 +13,11 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  var name = '';
   List<Entry> entries = [];
 
   void initState() {
     super.initState();
-    name = 'Hello';
-    entries = [
-      Entry(title: 'Title 1', content: 'Content1'),
-      Entry(title: 'Title 2', content: 'Content2'),
-    ];
+    entries = [];
   }
 
   @override
@@ -45,13 +43,14 @@ class _HomeState extends State<Home> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          goToAddEntryScreen(context);
+          goToAddEntryScreen(
+              context, AddEntryScreenArguments(addEntry: addEntry));
         },
         backgroundColor: Colors.green,
         child: const Icon(Icons.add),
       ),
       body: SingleChildScrollView(
-        child: JournalEntriesList(name: name, entries: entries),
+        child: JournalEntriesList(entries: entries),
       ),
       endDrawer: Drawer(
         child: ListView(
@@ -89,7 +88,22 @@ class _HomeState extends State<Home> {
   /*
     Navigate to AddEntry Screen
   */
-  void goToAddEntryScreen(BuildContext context) {
-    Navigator.of(context).pushNamed('addentry');
+  void goToAddEntryScreen(BuildContext context, args) {
+    Navigator.of(context).pushNamed(
+      'addentry',
+      arguments: args,
+    );
+  }
+
+  /*
+    - Add an entry to entries list
+  */
+  void addEntry() {
+    setState(() {
+      //Do something
+      Entry newEntry = Entry(title: "Journal Entry #3", content: "Content #3");
+      entries.add(newEntry);
+      print('ENTRIES: $entries');
+    });
   }
 }
