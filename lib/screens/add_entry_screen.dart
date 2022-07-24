@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/add_entry_screen_arg.dart';
+import 'package:sqflite/sqflite.dart';
 
 class JournalEntryFields {
   String title = '';
@@ -139,6 +140,8 @@ class _AddEntryState extends State<AddEntry> {
                     ElevatedButton(
                       child: const Text('Save'),
                       onPressed: () {
+                        initDb();
+
                         if (formKey.currentState!.validate()) {
                           // Stores textfields values in DTO
                           formKey.currentState!.save();
@@ -223,5 +226,33 @@ class _AddEntryState extends State<AddEntry> {
   */
   void goBack(context) {
     Navigator.pop(context);
+  }
+
+  /*
+    - Initialzie dB
+  */
+  void initDb() async {
+    await deleteDatabase('journal.db');
+
+    final Database database = await openDatabase('journal.db', version: 1,
+        onCreate: (Database db, int version) async {
+      await db.execute(
+        'CREATE TABLE IF NOT EXISTS journal_entries(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, body TEXT, rating INTEGER, date DATETIME)',
+      );
+    });
+
+    await database.transaction((txn) async {
+      await txn.rawInsert(
+        'INSERT INTO journal_entries(title, body, rating, date) VALUES (?, ?, ?, ?)',
+        [
+          journalEntryFields.title,
+          journalEntryFields.body,
+          journalEntryFields.rating,
+          journalEntryFields.date.toString(),
+        ],
+      );
+    });
+
+    await database.close();
   }
 }
