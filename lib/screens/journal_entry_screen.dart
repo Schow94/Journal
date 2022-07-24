@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/screen_class.dart';
+import 'package:intl/intl.dart';
 
 class JournalEntryScreen extends StatelessWidget {
   const JournalEntryScreen({Key? key}) : super(key: key);
@@ -9,8 +10,9 @@ class JournalEntryScreen extends StatelessWidget {
     final screenargs =
         ModalRoute.of(context)?.settings.arguments as ScreenArguments;
     final String title = screenargs.title;
-    final String date = screenargs.date;
-    final String content = screenargs.content;
+    final DateTime date = screenargs.date;
+    final String body = screenargs.body;
+    final int rating = screenargs.rating;
 
     return Scaffold(
       appBar: AppBar(
@@ -42,8 +44,10 @@ class JournalEntryScreen extends StatelessWidget {
       ),
       body: LayoutBuilder(builder: (context, constraints) {
         return constraints.maxWidth < 400
-            ? VerticalLayout(title: title, date: date, content: content)
-            : HorizontalLayout(title: title, date: date, content: content);
+            ? VerticalLayout(
+                title: title, date: date, body: body, rating: rating)
+            : HorizontalLayout(
+                title: title, date: date, body: body, rating: rating);
       }),
       endDrawer: Drawer(
         child: ListView(
@@ -89,9 +93,11 @@ class JournalEntryScreen extends StatelessWidget {
 class VerticalLayout extends StatelessWidget {
   final title;
   final date;
-  final content;
+  final body;
+  final rating;
 
-  const VerticalLayout({Key? key, this.title, this.date, this.content})
+  const VerticalLayout(
+      {Key? key, this.title, this.date, this.body, this.rating})
       : super(key: key);
 
   @override
@@ -100,24 +106,31 @@ class VerticalLayout extends StatelessWidget {
       margin: const EdgeInsets.all(20),
       child: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(title, style: Theme.of(context).textTheme.headline6),
-                Text(' - '),
-                Text(date, style: Theme.of(context).textTheme.bodyText2),
+                const Text(' - '),
+                Text(
+                  DateFormat('yyyy-MM-dd').format(date),
+                  style: Theme.of(context).textTheme.bodyText2,
+                ),
               ],
             ),
-            SizedBox(height: 10),
-            Divider(),
-            SizedBox(height: 10),
+            Text('Rating: $rating'),
+            const SizedBox(height: 10),
+            const Divider(),
+            const SizedBox(height: 10),
             Text(
-              content,
-              style: TextStyle(height: 1.5),
+              body,
+              style: const TextStyle(
+                height: 1.5,
+              ),
             ),
+            //Use ListBuilder() to dynamically render stars for ratings?
           ],
         ),
       ),
@@ -128,9 +141,11 @@ class VerticalLayout extends StatelessWidget {
 class HorizontalLayout extends StatelessWidget {
   final title;
   final date;
-  final content;
+  final body;
+  final rating;
 
-  const HorizontalLayout({Key? key, this.title, this.date, this.content})
+  const HorizontalLayout(
+      {Key? key, this.title, this.date, this.body, this.rating})
       : super(key: key);
 
   @override
@@ -157,7 +172,7 @@ class HorizontalLayout extends StatelessWidget {
                       title,
                       style: Theme.of(context).textTheme.headline5,
                     ),
-                    Text(date),
+                    Text('$date'),
                   ],
                 ),
               ),
@@ -170,7 +185,7 @@ class HorizontalLayout extends StatelessWidget {
               ),
               Container(
                 width: MediaQuery.of(context).size.width * 0.55,
-                child: Text(content),
+                child: Text(body),
               ),
             ],
           ),

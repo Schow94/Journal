@@ -1,15 +1,34 @@
 import 'package:flutter/material.dart';
 import '../models/add_entry_screen_arg.dart';
 
-class AddEntry extends StatelessWidget {
+class JournalEntryFields {
+  String title = '';
+  String body = '';
+  DateTime date = DateTime.now();
+  int rating = 0;
+
+  String toString() {
+    return 'Title: $title, Body: $body, Time: $date, Rating: $rating';
+  }
+}
+
+class AddEntry extends StatefulWidget {
   const AddEntry({Key? key}) : super(key: key);
+
+  @override
+  State<AddEntry> createState() => _AddEntryState();
+}
+
+class _AddEntryState extends State<AddEntry> {
+  final formKey = GlobalKey<FormState>();
+  final journalEntryFields = JournalEntryFields();
 
   @override
   Widget build(BuildContext context) {
     // Might be able to use  JournalEntry as ScreenArguments
     final screenargs =
         ModalRoute.of(context)?.settings.arguments as AddEntryScreenArguments;
-    final VoidCallback addEntry = screenargs.addEntry;
+    final void Function(dynamic) addEntry = screenargs.addEntry;
 
     return Scaffold(
       appBar: AppBar(
@@ -43,83 +62,97 @@ class AddEntry extends StatelessWidget {
         child: Container(
           height: getHeight(context),
           margin: const EdgeInsets.all(40),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              TextFormField(
-                autofocus: true,
-                decoration: const InputDecoration(
-                  labelText: 'Title',
-                  border: OutlineInputBorder(),
+          child: Form(
+            key: formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                TextFormField(
+                  autofocus: true,
+                  decoration: const InputDecoration(
+                    labelText: 'Title',
+                    border: OutlineInputBorder(),
+                  ),
+                  onSaved: (value) {
+                    // Save value in state
+                    journalEntryFields.title = value!;
+                  },
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter a title';
+                    } else {
+                      return null;
+                    }
+                  },
                 ),
-                onSaved: (value) {
-                  // Save value in state
-                },
-                validator: (String? value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter a title';
-                  } else {
-                    return null;
-                  }
-                },
-              ),
-              TextFormField(
-                autofocus: true,
-                decoration: const InputDecoration(
-                  labelText: 'Body',
-                  border: OutlineInputBorder(),
+                TextFormField(
+                  autofocus: true,
+                  decoration: const InputDecoration(
+                    labelText: 'Body',
+                    border: OutlineInputBorder(),
+                  ),
+                  onSaved: (value) {
+                    // Save value in state
+                    journalEntryFields.body = value!;
+                  },
+                  validator: (String? value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter a title';
+                    } else {
+                      return null;
+                    }
+                  },
                 ),
-                onSaved: (value) {
-                  // Save value in state
-                },
-                validator: (String? value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter a title';
-                  } else {
-                    return null;
-                  }
-                },
-              ),
-              TextFormField(
-                autofocus: true,
-                decoration: const InputDecoration(
-                  labelText: 'Rating',
-                  border: OutlineInputBorder(),
+                TextFormField(
+                  autofocus: true,
+                  decoration: const InputDecoration(
+                    labelText: 'Rating',
+                    border: OutlineInputBorder(),
+                  ),
+                  onSaved: (value) {
+                    // Save value in state
+                    journalEntryFields.rating = int.parse(value!);
+                  },
+                  validator: (String? value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter a rating';
+                    } else {
+                      return null;
+                    }
+                  },
                 ),
-                onSaved: (value) {
-                  // Save value in state
-                },
-                validator: (String? value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter a rating';
-                  } else {
-                    return null;
-                  }
-                },
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.grey, // Background color
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.grey, // Background color
+                      ),
+                      child: const Text('Cancel'),
+                      onPressed: () {
+                        goToHomeScreen(context);
+                      },
                     ),
-                    child: const Text('Cancel'),
-                    onPressed: () {
-                      goToHomeScreen(context);
-                    },
-                  ),
-                  ElevatedButton(
-                    child: const Text('Save'),
-                    onPressed: () {
-                      addEntry();
-                      saveEntry(context);
-                    },
-                  ),
-                ],
-              ),
-            ],
+                    ElevatedButton(
+                      child: const Text('Save'),
+                      onPressed: () {
+                        if (formKey.currentState!.validate()) {
+                          // Stores textfields values in DTO
+                          formKey.currentState!.save();
+                          // Save to db here
+                          // Database.of(context).saveJournalEntry(journalEntryFields);
+
+                          // print(journalEntryFields);
+                          addEntry(journalEntryFields);
+                          saveEntry(context);
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

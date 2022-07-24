@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
-
 class AddEntryScreenArguments {
-  final VoidCallback addEntry;
+  final void Function(dynamic) addEntry;
 
   AddEntryScreenArguments({required this.addEntry});
 }

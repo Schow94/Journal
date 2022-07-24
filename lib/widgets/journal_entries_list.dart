@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../models/screen_class.dart';
 import '../models/entry.dart';
+import 'dart:core';
+import 'package:intl/intl.dart';
 
 class JournalEntriesList extends StatelessWidget {
   final List<Entry> entries;
@@ -21,9 +23,10 @@ class JournalEntriesList extends StatelessWidget {
               goToJournalEntry(
                 context,
                 ScreenArguments(
-                  entries[index].title,
-                  entries[index].title,
-                  entries[index].title,
+                  title: entries[index].title,
+                  body: entries[index].body,
+                  rating: entries[index].rating,
+                  date: entries[index].date,
                 ),
               );
             },
@@ -32,7 +35,9 @@ class JournalEntriesList extends StatelessWidget {
                 leading: const Icon(Icons.book_outlined),
                 trailing: const Icon(Icons.more_vert),
                 title: Text(entries[index].title),
-                subtitle: Text(entries[index].content),
+                subtitle: Text(
+                  DateFormat('yyy-MM-dd').format(entries[index].date),
+                ),
               ),
             ),
           );

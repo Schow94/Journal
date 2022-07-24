@@ -98,12 +98,16 @@ class _HomeState extends State<Home> {
   /*
     - Add an entry to entries list
   */
-  void addEntry() {
+  void addEntry(journalEntry) {
     setState(() {
       //Do something
-      Entry newEntry = Entry(title: "Journal Entry #3", content: "Content #3");
+      Entry newEntry = Entry(
+        title: journalEntry.title,
+        body: journalEntry.body,
+        date: journalEntry.date,
+        rating: journalEntry.rating,
+      );
       entries.add(newEntry);
-      print('ENTRIES: $entries');
     });
   }
 }

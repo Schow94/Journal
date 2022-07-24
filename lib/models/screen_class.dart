@@ -1,7 +1,15 @@
+import 'dart:core';
+
 class ScreenArguments {
   final String title;
-  final String date;
-  final String content;
+  final String body;
+  final int rating;
+  final DateTime date;
 
-  ScreenArguments(this.title, this.date, this.content);
+  ScreenArguments({
+    required this.title,
+    required this.date,
+    required this.body,
+    required this.rating,
+  });
 }
