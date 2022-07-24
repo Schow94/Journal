@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
+
 import 'package:project4/models/add_entry_screen_arg.dart';
 import '../widgets/journal_entries_list.dart';
 import '../models/entry.dart';
@@ -17,6 +19,7 @@ class _HomeState extends State<Home> {
 
   void initState() {
     super.initState();
+    loadJournal();
     entries = [];
   }
 
@@ -109,5 +112,19 @@ class _HomeState extends State<Home> {
       );
       entries.add(newEntry);
     });
+  }
+
+  void loadJournal() async {
+    final Database database = await openDatabase('journal.db', version: 1,
+        onCreate: (Database db, int version) async {
+      await db.execute(
+        'CREATE TABLE IF NOT EXISTS journal_entries(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, body TEXT, rating INTEGER, date DATETIME)',
+      );
+    });
+
+    List<Map> journalRecords =
+        await database.rawQuery('SELECT * FROM journal_entries');
+
+    print(journalRecords);
   }
 }
