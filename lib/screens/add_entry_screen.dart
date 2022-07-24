@@ -115,8 +115,10 @@ class _AddEntryState extends State<AddEntry> {
                     journalEntryFields.rating = int.parse(value!);
                   },
                   validator: (String? value) {
-                    if (value!.isEmpty) {
-                      return 'Please enter a rating';
+                    if (value!.isEmpty ||
+                        int.parse(value) < 1 ||
+                        int.parse(value) > 4) {
+                      return 'Please enter a rating between 1 and 4';
                     } else {
                       return null;
                     }
