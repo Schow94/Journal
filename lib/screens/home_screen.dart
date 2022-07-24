@@ -114,17 +114,33 @@ class _HomeState extends State<Home> {
     });
   }
 
+  // Load journal entries from db when component mounts
   void loadJournal() async {
     final Database database = await openDatabase('journal.db', version: 1,
         onCreate: (Database db, int version) async {
       await db.execute(
-        'CREATE TABLE IF NOT EXISTS journal_entries(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, body TEXT, rating INTEGER, date DATETIME)',
+        'CREATE TABLE IF NOT EXISTS journal_entries(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, body TEXT, rating INTEGER, date DATETIME;)',
       );
     });
 
+    // Query db for all journal entries
     List<Map> journalRecords =
-        await database.rawQuery('SELECT * FROM journal_entries');
-
+        await database.rawQuery('SELECT * FROM journal_entries;');
     print(journalRecords);
+
+    // Map through []Maps to get []JournalEntry
+    final journalEntries = journalRecords.map((record) {
+      return Entry(
+        title: record['title'],
+        body: record['body'],
+        rating: record['rating'],
+        date: DateTime.parse(record['date']),
+      );
+    }).toList();
+
+    // Update State
+    setState(() {
+      entries = journalEntries;
+    });
   }
 }
