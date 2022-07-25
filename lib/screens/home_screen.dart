@@ -73,10 +73,11 @@ class _HomeState extends State<Home> {
               children: [
                 const Text('Dark Mode'),
                 Switch(
+                  value: darkTheme,
                   onChanged: (value) {
                     // Do something
+                    changeTheme();
                   },
-                  value: false,
                   // activeTrackColor: Colors.lightGreenAccent,
                   // activeColor: Colors.green,
                 ),
@@ -164,6 +165,31 @@ class _HomeState extends State<Home> {
       // } else {
       //   darkTheme = true;
       // }
+    });
+  }
+
+  void changeTheme() async {
+    final Database database = await openDatabase('journals.db', version: 1,
+        onCreate: (Database db, int version) async {
+      await db.execute(
+        'CREATE TABLE IF NOT EXISTS theme(id INTEGER PRIMARY KEY AUTOINCREMENT, dark INTEGER)',
+      );
+    });
+
+    await database.transaction((txn) async {
+      int darkVal = darkTheme == false ? 1 : 0;
+
+      await txn.rawInsert(
+        "UPDATE theme SET dark=? WHERE id=1",
+        [darkVal],
+      );
+    });
+
+    List<Map> themeRecords = await database.rawQuery('SELECT * FROM theme');
+    print('THEME: $themeRecords');
+
+    setState(() {
+      darkTheme = themeRecords[0]['dark'] == 0 ? false : true;
     });
   }
 }
