@@ -234,16 +234,20 @@ class _AddEntryState extends State<AddEntry> {
   void initDb() async {
     // await deleteDatabase('journal.db');
 
-    final Database database = await openDatabase('journal.db', version: 1,
+    final Database database = await openDatabase('journals.db', version: 1,
         onCreate: (Database db, int version) async {
       await db.execute(
-        'CREATE TABLE IF NOT EXISTS journal_entries(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, body TEXT, rating INTEGER, date DATETIME);',
+        'CREATE TABLE IF NOT EXISTS journal_entries(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, body TEXT, rating INTEGER, date DATETIME)',
       );
+
+      // await db.execute(
+      //   'CREATE TABLE IF NOT EXISTS theme(id INTEGER PRIMARY KEY AUTOINCREMENT, dark INTEGER)',
+      // );
     });
 
     await database.transaction((txn) async {
       await txn.rawInsert(
-        'INSERT INTO journal_entries(title, body, rating, date) VALUES (?, ?, ?, ?);',
+        'INSERT INTO journal_entries(title, body, rating, date) VALUES (?, ?, ?, ?)',
         [
           journalEntryFields.title,
           journalEntryFields.body,
@@ -253,6 +257,17 @@ class _AddEntryState extends State<AddEntry> {
       );
     });
 
-    await database.close();
+    // await database.transaction((txn) async {
+    //   await txn.rawInsert(
+    //     'INSERT INTO theme(dark) VALUES (?)',
+    //     [0],
+    //   );
+    // });
+
+    // // Query db for all journal entries
+    // List<Map> themeRecords = await database.rawQuery('SELECT * FROM theme');
+    // print('THEME: $themeRecords');
+
+    // await database.close();
   }
 }

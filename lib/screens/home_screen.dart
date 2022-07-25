@@ -16,11 +16,11 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   List<Entry> entries = [];
+  bool darkTheme = false;
 
   void initState() {
     super.initState();
     loadJournal();
-    entries = [];
   }
 
   @override
@@ -49,7 +49,7 @@ class _HomeState extends State<Home> {
           goToAddEntryScreen(
               context, AddEntryScreenArguments(addEntry: addEntry));
         },
-        backgroundColor: Colors.green,
+        backgroundColor: darkTheme ? Colors.green : Colors.red,
         child: const Icon(Icons.add),
       ),
       body: SingleChildScrollView(
@@ -116,17 +116,34 @@ class _HomeState extends State<Home> {
 
   // Load journal entries from db when component mounts
   void loadJournal() async {
-    final Database database = await openDatabase('journal.db', version: 1,
+    await deleteDatabase('journals.db');
+
+    final Database database = await openDatabase('journals.db', version: 1,
         onCreate: (Database db, int version) async {
       await db.execute(
-        'CREATE TABLE IF NOT EXISTS journal_entries(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, body TEXT, rating INTEGER, date DATETIME;)',
+        'CREATE TABLE IF NOT EXISTS journal_entries(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, body TEXT, rating INTEGER, date DATETIME)',
+      );
+
+      await db.execute(
+        'CREATE TABLE IF NOT EXISTS theme(id INTEGER PRIMARY KEY AUTOINCREMENT, dark INTEGER)',
+      );
+    });
+
+    await database.transaction((txn) async {
+      await txn.rawInsert(
+        'INSERT INTO theme(dark) VALUES (?)',
+        [0],
       );
     });
 
     // Query db for all journal entries
+    List<Map> themeRecords = await database.rawQuery('SELECT * FROM theme');
+    print('THEME: $themeRecords');
+
+    // Query db for all journal entries
     List<Map> journalRecords =
-        await database.rawQuery('SELECT * FROM journal_entries;');
-    print(journalRecords);
+        await database.rawQuery('SELECT * FROM journal_entries');
+    // print(journalRecords);
 
     // Map through []Maps to get []JournalEntry
     final journalEntries = journalRecords.map((record) {
@@ -141,6 +158,12 @@ class _HomeState extends State<Home> {
     // Update State
     setState(() {
       entries = journalEntries;
+      darkTheme = themeRecords[0]['dark'] == 0 ? false : true;
+      // if (themeRecords[0]['dark'] == 0) {
+      //   darkTheme = false;
+      // } else {
+      //   darkTheme = true;
+      // }
     });
   }
 }
