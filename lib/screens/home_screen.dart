@@ -56,34 +56,37 @@ class _HomeState extends State<Home> {
         child: JournalEntriesList(entries: entries),
       ),
       endDrawer: Drawer(
-        child: ListView(
-          padding: const EdgeInsets.all(0),
-          children: [
-            const SizedBox(
-              height: 90.0,
-              child: DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Colors.green,
+        child: Container(
+          color: darkTheme ? Colors.grey : Colors.white,
+          child: ListView(
+            padding: const EdgeInsets.all(0),
+            children: [
+              const SizedBox(
+                height: 90.0,
+                child: DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Colors.green,
+                  ),
+                  child: Text('Settings'),
                 ),
-                child: Text('Settings'),
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                const Text('Dark Mode'),
-                Switch(
-                  value: darkTheme,
-                  onChanged: (value) {
-                    // Do something
-                    changeTheme();
-                  },
-                  // activeTrackColor: Colors.lightGreenAccent,
-                  // activeColor: Colors.green,
-                ),
-              ],
-            ),
-          ],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  const Text('Dark Mode'),
+                  Switch(
+                    value: darkTheme,
+                    onChanged: (value) {
+                      // Do something
+                      changeTheme();
+                    },
+                    // activeTrackColor: Colors.lightGreenAccent,
+                    // activeColor: Colors.green,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
