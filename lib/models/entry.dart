@@ -1,9 +1,9 @@
 // Model for how a JournalEntry should look
 class Entry {
-  String title;
-  String body;
-  int rating;
-  DateTime date;
+  final String title;
+  final String body;
+  final int rating;
+  DateTime date = DateTime.now();
 
   Entry({
     required this.title,

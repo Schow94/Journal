@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:sqflite/sqflite.dart';
+// import 'package:sqflite/sqflite.dart';
 
+import '../db/database_manager.dart';
 import 'package:project4/models/add_entry_screen_arg.dart';
+
 import '../widgets/journal_entries_list.dart';
 import '../models/entry.dart';
 
@@ -78,7 +80,7 @@ class _HomeState extends State<Home> {
                     value: darkTheme,
                     onChanged: (value) {
                       // Do something
-                      changeTheme();
+                      // changeTheme();
                     },
                     // activeTrackColor: Colors.lightGreenAccent,
                     // activeColor: Colors.green,
@@ -106,12 +108,14 @@ class _HomeState extends State<Home> {
     - Add an entry to entries list
   */
   void addEntry(journalEntry) {
+    print(journalEntry);
+
     setState(() {
       //Do something
       Entry newEntry = Entry(
         title: journalEntry.title,
         body: journalEntry.body,
-        date: journalEntry.date,
+        date: DateTime.now(),
         rating: journalEntry.rating,
       );
       entries.add(newEntry);
@@ -120,49 +124,51 @@ class _HomeState extends State<Home> {
 
   // Load journal entries from db when component mounts
   void loadJournal() async {
-    await deleteDatabase('journals.db');
+    // await deleteDatabase('journals.db');
+    final databaseManager = DatabaseManager.getInstance();
+    List<Entry> journalEntries = await databaseManager.journalEntries();
 
-    final Database database = await openDatabase('journals.db', version: 1,
-        onCreate: (Database db, int version) async {
-      await db.execute(
-        'CREATE TABLE IF NOT EXISTS journal_entries(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, body TEXT, rating INTEGER, date DATETIME)',
-      );
+    // final Database database = await openDatabase('journals.db', version: 1,
+    //     onCreate: (Database db, int version) async {
+    //   await db.execute(
+    //     'CREATE TABLE IF NOT EXISTS journal_entries(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, body TEXT, rating INTEGER, date DATETIME)',
+    //   );
 
-      await db.execute(
-        'CREATE TABLE IF NOT EXISTS theme(id INTEGER PRIMARY KEY AUTOINCREMENT, dark INTEGER)',
-      );
-    });
+    //   await db.execute(
+    //     'CREATE TABLE IF NOT EXISTS theme(id INTEGER PRIMARY KEY AUTOINCREMENT, dark INTEGER)',
+    //   );
+    // });
 
-    await database.transaction((txn) async {
-      await txn.rawInsert(
-        'INSERT INTO theme(dark) VALUES (?)',
-        [0],
-      );
-    });
+    // await database.transaction((txn) async {
+    //   await txn.rawInsert(
+    //     'INSERT INTO theme(dark) VALUES (?)',
+    //     [0],
+    //   );
+    // });
 
-    // Query db for all journal entries
-    List<Map> themeRecords = await database.rawQuery('SELECT * FROM theme');
-    print('THEME: $themeRecords');
+    // // Query db for all journal entries
+    // List<Map> themeRecords = await database.rawQuery('SELECT * FROM theme');
+    // print('THEME: $themeRecords');
 
-    // Query db for all journal entries
-    List<Map> journalRecords =
-        await database.rawQuery('SELECT * FROM journal_entries');
-    // print(journalRecords);
+    // // Query db for all journal entries
+    // List<Map> journalRecords =
+    //     await database.rawQuery('SELECT * FROM journal_entries');
+    // // print(journalRecords);
 
-    // Map through []Maps to get []JournalEntry
-    final journalEntries = journalRecords.map((record) {
-      return Entry(
-        title: record['title'],
-        body: record['body'],
-        rating: record['rating'],
-        date: DateTime.parse(record['date']),
-      );
-    }).toList();
+    // // Map through []Maps to get []JournalEntry
+    // final journalEntries = journalRecords.map((record) {
+    //   return Entry(
+    //     title: record['title'],
+    //     body: record['body'],
+    //     rating: record['rating'],
+    //     date: DateTime.parse(record['date']),
+    //   );
+    // }).toList();
 
     // Update State
     setState(() {
       entries = journalEntries;
-      darkTheme = themeRecords[0]['dark'] == 0 ? false : true;
+      // darkTheme = themeRecords[0]['dark'] == 0 ? false : true;
       // if (themeRecords[0]['dark'] == 0) {
       //   darkTheme = false;
       // } else {
@@ -171,28 +177,28 @@ class _HomeState extends State<Home> {
     });
   }
 
-  void changeTheme() async {
-    final Database database = await openDatabase('journals.db', version: 1,
-        onCreate: (Database db, int version) async {
-      await db.execute(
-        'CREATE TABLE IF NOT EXISTS theme(id INTEGER PRIMARY KEY AUTOINCREMENT, dark INTEGER)',
-      );
-    });
+  // void changeTheme() async {
+  //   // final Database database = await openDatabase('journals.db', version: 1,
+  //   //     onCreate: (Database db, int version) async {
+  //   //   await db.execute(
+  //   //     'CREATE TABLE IF NOT EXISTS theme(id INTEGER PRIMARY KEY AUTOINCREMENT, dark INTEGER)',
+  //   //   );
+  //   // });
 
-    await database.transaction((txn) async {
-      int darkVal = darkTheme == false ? 1 : 0;
+  //   await database.transaction((txn) async {
+  //     int darkVal = darkTheme == false ? 1 : 0;
 
-      await txn.rawInsert(
-        "UPDATE theme SET dark=? WHERE id=1",
-        [darkVal],
-      );
-    });
+  //     await txn.rawInsert(
+  //       "UPDATE theme SET dark=? WHERE id=1",
+  //       [darkVal],
+  //     );
+  //   });
 
-    List<Map> themeRecords = await database.rawQuery('SELECT * FROM theme');
-    print('THEME: $themeRecords');
+  //   List<Map> themeRecords = await database.rawQuery('SELECT * FROM theme');
+  //   print('THEME: $themeRecords');
 
-    setState(() {
-      darkTheme = themeRecords[0]['dark'] == 0 ? false : true;
-    });
-  }
+  //   setState(() {
+  //     darkTheme = themeRecords[0]['dark'] == 0 ? false : true;
+  //   });
+  // }
 }

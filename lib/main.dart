@@ -19,6 +19,8 @@ void main() async {
     DeviceOrientation.landscapeRight,
     DeviceOrientation.portraitUp
   ]);
+
+  // Initialize single db instance
   await DatabaseManager.initialize();
   runApp(const App());
 }

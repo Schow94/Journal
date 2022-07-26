@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:project4/db/database_manager.dart';
+// import 'package:sqflite/sqflite.dart';
+
 import '../models/add_entry_screen_arg.dart';
-import 'package:sqflite/sqflite.dart';
+import '../db/journal_entry_dto.dart';
 
 class JournalEntryFields {
   String title = '';
@@ -22,7 +25,9 @@ class AddEntry extends StatefulWidget {
 
 class _AddEntryState extends State<AddEntry> {
   final formKey = GlobalKey<FormState>();
-  final journalEntryFields = JournalEntryFields();
+  // final journalEntryFields = JournalEntryFields();
+
+  final journalEntryFields = JournalEntryDTO();
 
   @override
   Widget build(BuildContext context) {
@@ -234,28 +239,34 @@ class _AddEntryState extends State<AddEntry> {
   void initDb() async {
     // await deleteDatabase('journal.db');
 
-    final Database database = await openDatabase('journals.db', version: 1,
-        onCreate: (Database db, int version) async {
-      await db.execute(
-        'CREATE TABLE IF NOT EXISTS journal_entries(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, body TEXT, rating INTEGER, date DATETIME)',
-      );
+    // DB was initialized in main.dart
+    // We get instance of db now
+    final databaseManager = DatabaseManager.getInstance();
 
-      // await db.execute(
-      //   'CREATE TABLE IF NOT EXISTS theme(id INTEGER PRIMARY KEY AUTOINCREMENT, dark INTEGER)',
-      // );
-    });
+    // final Database database = await openDatabase('journals.db', version: 1,
+    //     onCreate: (Database db, int version) async {
+    //   await db.execute(
+    //     'CREATE TABLE IF NOT EXISTS journal_entries(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, body TEXT, rating INTEGER, date DATETIME)',
+    //   );
 
-    await database.transaction((txn) async {
-      await txn.rawInsert(
-        'INSERT INTO journal_entries(title, body, rating, date) VALUES (?, ?, ?, ?)',
-        [
-          journalEntryFields.title,
-          journalEntryFields.body,
-          journalEntryFields.rating,
-          journalEntryFields.date.toString(),
-        ],
-      );
-    });
+    // await db.execute(
+    //   'CREATE TABLE IF NOT EXISTS theme(id INTEGER PRIMARY KEY AUTOINCREMENT, dark INTEGER)',
+    // );
+    // });
+
+    databaseManager.saveJournalEntry(dto: journalEntryFields);
+
+    // await database.transaction((txn) async {
+    //   await txn.rawInsert(
+    //     'INSERT INTO journal_entries(title, body, rating, date) VALUES (?, ?, ?, ?)',
+    //     [
+    //       journalEntryFields.title,
+    //       journalEntryFields.body,
+    //       journalEntryFields.rating,
+    //       journalEntryFields.date.toString(),
+    //     ],
+    //   );
+    // });
 
     // await database.transaction((txn) async {
     //   await txn.rawInsert(

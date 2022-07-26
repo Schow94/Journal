@@ -3,13 +3,14 @@ import 'journal_entry_dto.dart';
 import '../models/entry.dart';
 
 class DatabaseManager {
-  static const String DATABASE_FILENAME = 'journal.sqlite3.db';
+  static const String DATABASE_FILENAME = 'journals_2.db';
   static const String SQL_CREATE_SCHEMA =
       'CREATE TABLE IF NOT EXISTS journal_entries(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, body TEXT, rating INTEGER, date DATETIME)';
   static const String SQL_INSERT =
       'INSERT INTO journal_entries(title, body, rating, date) VALUES (?, ?, ?, ?)';
   static const String SQL_SELECT = 'SELECT * FROM journal_entries';
 
+  // Singleton db instance
   static DatabaseManager _instance = DatabaseManager._();
 
   final Database db;
@@ -27,6 +28,7 @@ class DatabaseManager {
       createTables(db, SQL_CREATE_SCHEMA);
     });
 
+    // Initialize single instance of db
     _instance = DatabaseManager._(database: db);
   }
 
@@ -50,6 +52,8 @@ class DatabaseManager {
 
   Future<List<Entry>> journalEntries() async {
     final List<Map> journalRecords = await db.rawQuery(SQL_SELECT);
+    print(journalRecords);
+
     final journalEntries = journalRecords.map((record) {
       return Entry(
         title: record['title'],
