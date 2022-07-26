@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:sqflite/sqflite.dart';
 
 import 'screens/add_entry_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/journal_entry_screen.dart';
 
 class App extends StatefulWidget {
-  const App({Key? key}) : super(key: key);
+  final SharedPreferences preferences;
+
+  const App({Key? key, required this.preferences}) : super(key: key);
 
   @override
   State<App> createState() => _AppState();
@@ -19,11 +22,14 @@ class _AppState extends State<App> {
     'journalentry': (context) => const JournalEntryScreen(),
   };
 
+  static const DARK_THEME = 'dark';
+  bool get dark => widget.preferences.getBool(DARK_THEME) ?? false;
+
   void initState() {
     super.initState();
-    // initTheme();
-    // entries = [];
-    // Create theme table in db
+
+    setTheme();
+    loadTheme();
   }
 
   @override
@@ -31,7 +37,7 @@ class _AppState extends State<App> {
     return MaterialApp(
       title: 'Journal',
       theme: ThemeData(
-        primarySwatch: Colors.green,
+        primarySwatch: dark ? Colors.grey : Colors.green,
         textTheme: const TextTheme(
           headline6: TextStyle(fontSize: 17.0),
         ),
@@ -40,26 +46,16 @@ class _AppState extends State<App> {
     );
   }
 
-  // void initTheme() async {
-  //   // Create theme table in db
+  void setTheme() async {
+    setState(() {
+      // Toggle Theme from light to dark
+      widget.preferences.setBool(DARK_THEME, dark ? false : true);
+    });
+  }
 
-  //   final Database database = await openDatabase('journal.db', version: 1,
-  //       onCreate: (Database db, int version) async {
-  //     await db.execute(
-  //       'CREATE TABLE IF NOT EXISTS theme(id INTEGER PRIMARY KEY AUTOINCREMENT, dark INTEGER);',
-  //     );
-  //   });
-
-  //   // Add entry into db 0 is False
-  //   await database.transaction((txn) async {
-  //     await txn.rawInsert(
-  //       'INSERT INTO theme(dark) VALUES (?);',
-  //       [0],
-  //     );
-  //   });
-
-  //   // Query db for all journal entries
-  //   List<Map> themeRecords = await database.rawQuery('SELECT * FROM theme;');
-  //   print('THEME: $themeRecords');
-  // }
+  void loadTheme() async {
+    setState(() {
+      widget.preferences.getBool(DARK_THEME);
+    });
+  }
 }
