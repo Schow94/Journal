@@ -8,8 +8,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'app.dart';
+import 'db/database_manager.dart';
 
-void main() {
+void main() async {
   // Allow these orientations on device
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -18,6 +19,6 @@ void main() {
     DeviceOrientation.landscapeRight,
     DeviceOrientation.portraitUp
   ]);
-
+  await DatabaseManager.initialize();
   runApp(const App());
 }
