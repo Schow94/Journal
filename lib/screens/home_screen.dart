@@ -57,8 +57,12 @@ class _HomeState extends State<Home> {
         backgroundColor: darkTheme ? Colors.grey : Colors.green,
         child: const Icon(Icons.add),
       ),
-      body: SingleChildScrollView(
-        child: JournalEntriesList(entries: entries),
+      body: Center(
+        child: SingleChildScrollView(
+          child: entries.isNotEmpty
+              ? JournalEntriesList(entries: entries)
+              : const Icon(Icons.book, size: 90.0),
+        ),
       ),
       endDrawer: Drawer(
         child: ListView(
