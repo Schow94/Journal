@@ -18,7 +18,9 @@ class JournalEntryScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Journal Entries'),
+        title: Text(
+          DateFormat('yyyy-MM-dd').format(date),
+        ),
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
@@ -116,14 +118,9 @@ class VerticalLayout extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(title, style: Theme.of(context).textTheme.headline6),
-                const Text(' - '),
-                Text(
-                  DateFormat('yyyy-MM-dd').format(date),
-                  style: Theme.of(context).textTheme.bodyText2,
-                ),
               ],
             ),
-            Text('Rating: $rating'),
+            makeStars(),
             const SizedBox(height: 10),
             const Divider(),
             const SizedBox(height: 10),
@@ -138,6 +135,30 @@ class VerticalLayout extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /*
+    - Dynamically renders stars to represent rating
+  */
+  Widget makeStars() {
+    // Hold stars
+    List<Widget> stars = [];
+
+    // Add filled stars
+    for (int i = 0; i < rating; i++) {
+      stars.add(
+        const Icon(Icons.star, color: Colors.green),
+      );
+    }
+
+    // Add emtpy stars
+    for (int i = 0; i < 4 - rating; i++) {
+      stars.add(
+        const Icon(Icons.star),
+      );
+    }
+
+    return Row(mainAxisAlignment: MainAxisAlignment.center, children: stars);
   }
 }
 
@@ -175,7 +196,7 @@ class HorizontalLayout extends StatelessWidget {
                       title,
                       style: Theme.of(context).textTheme.headline5,
                     ),
-                    Text('$date'),
+                    makeStars(),
                   ],
                 ),
               ),
@@ -195,5 +216,29 @@ class HorizontalLayout extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /*
+    - Dynamically renders stars to represent rating
+  */
+  Widget makeStars() {
+    // Hold stars
+    List<Widget> stars = [];
+
+    // Add filled stars
+    for (int i = 0; i < rating; i++) {
+      stars.add(
+        const Icon(Icons.star, color: Colors.green),
+      );
+    }
+
+    // Add emtpy stars
+    for (int i = 0; i < 4 - rating; i++) {
+      stars.add(
+        const Icon(Icons.star),
+      );
+    }
+
+    return Row(mainAxisAlignment: MainAxisAlignment.center, children: stars);
   }
 }

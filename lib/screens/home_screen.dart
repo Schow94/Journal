@@ -33,7 +33,9 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('Journal Entries'),
+        title: entries.isEmpty
+            ? const Text('Welcome')
+            : const Text('Journal Entries'),
         actions: [
           Builder(
             builder: (BuildContext context) {
