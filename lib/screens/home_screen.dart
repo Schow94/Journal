@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'package:sqflite/sqflite.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
+// import 'package:shared_preferences/shared_preferences.dart';
 import '../db/database_manager.dart';
 import 'package:project4/models/add_entry_screen_arg.dart';
 
@@ -11,19 +9,26 @@ import '../models/entry.dart';
 import '../models/add_entry_screen_arg.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+  VoidCallback setTheme;
+
+  Home(this.setTheme);
 
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  List<Entry> entries = [];
   bool darkTheme = false;
+
+  static const DARK_THEME = 'dark';
+
+  List<Entry> entries = [];
 
   void initState() {
     super.initState();
     loadJournal();
+    // setTheme();
+    // loadTheme();
   }
 
   @override
@@ -52,7 +57,7 @@ class _HomeState extends State<Home> {
           goToAddEntryScreen(
               context, AddEntryScreenArguments(addEntry: addEntry));
         },
-        backgroundColor: darkTheme ? Colors.green : Colors.red,
+        backgroundColor: darkTheme ? Colors.grey : Colors.green,
         child: const Icon(Icons.add),
       ),
       body: SingleChildScrollView(
@@ -80,8 +85,8 @@ class _HomeState extends State<Home> {
                   Switch(
                     value: darkTheme,
                     onChanged: (value) {
-                      // Do something
-                      // changeTheme();
+                      // Calling parent Widget's method from child
+                      widget.setTheme();
                     },
                     // activeTrackColor: Colors.lightGreenAccent,
                     // activeColor: Colors.green,
@@ -129,77 +134,9 @@ class _HomeState extends State<Home> {
     final databaseManager = DatabaseManager.getInstance();
     List<Entry> journalEntries = await databaseManager.journalEntries();
 
-    // final Database database = await openDatabase('journals.db', version: 1,
-    //     onCreate: (Database db, int version) async {
-    //   await db.execute(
-    //     'CREATE TABLE IF NOT EXISTS journal_entries(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, body TEXT, rating INTEGER, date DATETIME)',
-    //   );
-
-    //   await db.execute(
-    //     'CREATE TABLE IF NOT EXISTS theme(id INTEGER PRIMARY KEY AUTOINCREMENT, dark INTEGER)',
-    //   );
-    // });
-
-    // await database.transaction((txn) async {
-    //   await txn.rawInsert(
-    //     'INSERT INTO theme(dark) VALUES (?)',
-    //     [0],
-    //   );
-    // });
-
-    // // Query db for all journal entries
-    // List<Map> themeRecords = await database.rawQuery('SELECT * FROM theme');
-    // print('THEME: $themeRecords');
-
-    // // Query db for all journal entries
-    // List<Map> journalRecords =
-    //     await database.rawQuery('SELECT * FROM journal_entries');
-    // // print(journalRecords);
-
-    // // Map through []Maps to get []JournalEntry
-    // final journalEntries = journalRecords.map((record) {
-    //   return Entry(
-    //     title: record['title'],
-    //     body: record['body'],
-    //     rating: record['rating'],
-    //     date: DateTime.parse(record['date']),
-    //   );
-    // }).toList();
-
     // Update State
     setState(() {
       entries = journalEntries;
-      // darkTheme = themeRecords[0]['dark'] == 0 ? false : true;
-      // if (themeRecords[0]['dark'] == 0) {
-      //   darkTheme = false;
-      // } else {
-      //   darkTheme = true;
-      // }
     });
   }
-
-  // void changeTheme() async {
-  //   // final Database database = await openDatabase('journals.db', version: 1,
-  //   //     onCreate: (Database db, int version) async {
-  //   //   await db.execute(
-  //   //     'CREATE TABLE IF NOT EXISTS theme(id INTEGER PRIMARY KEY AUTOINCREMENT, dark INTEGER)',
-  //   //   );
-  //   // });
-
-  //   await database.transaction((txn) async {
-  //     int darkVal = darkTheme == false ? 1 : 0;
-
-  //     await txn.rawInsert(
-  //       "UPDATE theme SET dark=? WHERE id=1",
-  //       [darkVal],
-  //     );
-  //   });
-
-  //   List<Map> themeRecords = await database.rawQuery('SELECT * FROM theme');
-  //   print('THEME: $themeRecords');
-
-  //   setState(() {
-  //     darkTheme = themeRecords[0]['dark'] == 0 ? false : true;
-  //   });
-  // }
 }

@@ -23,5 +23,10 @@ void main() async {
 
   // Initialize single db instance
   await DatabaseManager.initialize();
-  runApp(App(preferences: await SharedPreferences.getInstance()));
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  // Loading darkTheme from SharedPreferences
+  bool darkTheme = prefs.getBool("dark")!;
+
+  // Single Instance of SharedPreferences so theme can persist
+  runApp(App(darkTheme, prefs));
 }

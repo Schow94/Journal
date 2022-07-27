@@ -3,7 +3,9 @@ import '../models/screen_class.dart';
 import 'package:intl/intl.dart';
 
 class JournalEntryScreen extends StatelessWidget {
-  const JournalEntryScreen({Key? key}) : super(key: key);
+  VoidCallback setTheme;
+
+  JournalEntryScreen(this.setTheme);
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +71,7 @@ class JournalEntryScreen extends StatelessWidget {
                 Switch(
                   onChanged: (value) {
                     // Do something
+                    setTheme();
                   },
                   value: false,
                   // activeTrackColor: Colors.lightGreenAccent,

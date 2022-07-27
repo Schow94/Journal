@@ -1,61 +1,70 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:sqflite/sqflite.dart';
 
 import 'screens/add_entry_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/journal_entry_screen.dart';
 
 class App extends StatefulWidget {
-  final SharedPreferences preferences;
+  bool darkTheme;
+  late SharedPreferences prefs;
 
-  const App({Key? key, required this.preferences}) : super(key: key);
+  // final SharedPreferences preferences;
+
+  App(this.darkTheme, prefs);
 
   @override
   State<App> createState() => _AppState();
 }
 
 class _AppState extends State<App> {
-  static final routes = {
-    '/': (context) => const Home(),
-    'addentry': (context) => const AddEntry(),
-    'journalentry': (context) => const JournalEntryScreen(),
-  };
+  // static const DARK_THEME = 'dark';
+  // bool darkTheme = false;
 
-  static const DARK_THEME = 'dark';
-  bool get dark => widget.preferences.getBool(DARK_THEME) ?? false;
+  // bool get dark => widget.preferences.getBool(DARK_THEME) ?? false;
 
-  void initState() {
-    super.initState();
+  // static final routes = {
+  //   '/': (context) => const Home(),
+  //   'addentry': (context) => const AddEntry(),
+  //   'journalentry': (context) => const JournalEntryScreen(),
+  // };
 
-    setTheme();
-    loadTheme();
-  }
+  // void initState() {
+  //   super.initState();
+
+  //   // setTheme();
+  //   loadTheme();
+  // }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Journal',
       theme: ThemeData(
-        primarySwatch: dark ? Colors.grey : Colors.green,
+        primarySwatch: Colors.green,
         textTheme: const TextTheme(
           headline6: TextStyle(fontSize: 17.0),
         ),
       ),
-      routes: routes,
+      darkTheme: ThemeData(
+          brightness: Brightness.dark, primarySwatch: Colors.deepPurple),
+      themeMode: widget.darkTheme ? ThemeMode.dark : ThemeMode.light,
+      routes: {
+        '/': (context) => Home(setTheme),
+        'addentry': (context) => AddEntry(setTheme),
+        'journalentry': (context) => JournalEntryScreen(setTheme),
+      },
     );
   }
 
   void setTheme() async {
     setState(() {
       // Toggle Theme from light to dark
-      widget.preferences.setBool(DARK_THEME, dark ? false : true);
+      widget.darkTheme = widget.darkTheme ? false : true;
     });
-  }
 
-  void loadTheme() async {
-    setState(() {
-      widget.preferences.getBool(DARK_THEME);
-    });
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setBool('dark', widget.darkTheme);
+    // bool get dark => widget.preferences.getBool(DARK_THEME) ?? false;
   }
 }
