@@ -18,24 +18,6 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  // static const DARK_THEME = 'dark';
-  // bool darkTheme = false;
-
-  // bool get dark => widget.preferences.getBool(DARK_THEME) ?? false;
-
-  // static final routes = {
-  //   '/': (context) => const Home(),
-  //   'addentry': (context) => const AddEntry(),
-  //   'journalentry': (context) => const JournalEntryScreen(),
-  // };
-
-  // void initState() {
-  //   super.initState();
-
-  //   // setTheme();
-  //   loadTheme();
-  // }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -65,6 +47,5 @@ class _AppState extends State<App> {
 
     final SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setBool('dark', widget.darkTheme);
-    // bool get dark => widget.preferences.getBool(DARK_THEME) ?? false;
   }
 }

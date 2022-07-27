@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
 import '../db/database_manager.dart';
 import 'package:project4/models/add_entry_screen_arg.dart';
 
@@ -27,8 +26,6 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     loadJournal();
-    // setTheme();
-    // loadTheme();
   }
 
   @override
@@ -64,37 +61,34 @@ class _HomeState extends State<Home> {
         child: JournalEntriesList(entries: entries),
       ),
       endDrawer: Drawer(
-        child: Container(
-          color: darkTheme ? Colors.grey : Colors.white,
-          child: ListView(
-            padding: const EdgeInsets.all(0),
-            children: [
-              const SizedBox(
-                height: 90.0,
-                child: DrawerHeader(
-                  decoration: BoxDecoration(
-                    color: Colors.green,
-                  ),
-                  child: Text('Settings'),
+        child: ListView(
+          padding: const EdgeInsets.all(0),
+          children: [
+            const SizedBox(
+              height: 90.0,
+              child: DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.green,
                 ),
+                child: Text('Settings'),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  const Text('Dark Mode'),
-                  Switch(
-                    value: darkTheme,
-                    onChanged: (value) {
-                      // Calling parent Widget's method from child
-                      widget.setTheme();
-                    },
-                    // activeTrackColor: Colors.lightGreenAccent,
-                    // activeColor: Colors.green,
-                  ),
-                ],
-              ),
-            ],
-          ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                const Text('Dark Mode'),
+                Switch(
+                  value: darkTheme,
+                  onChanged: (value) {
+                    // Calling parent Widget's method from child
+                    widget.setTheme();
+                  },
+                  // activeTrackColor: Colors.lightGreenAccent,
+                  // activeColor: Colors.green,
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -114,8 +108,6 @@ class _HomeState extends State<Home> {
     - Add an entry to entries list
   */
   void addEntry(journalEntry) {
-    print(journalEntry);
-
     setState(() {
       //Do something
       Entry newEntry = Entry(
@@ -130,7 +122,6 @@ class _HomeState extends State<Home> {
 
   // Load journal entries from db when component mounts
   void loadJournal() async {
-    // await deleteDatabase('journals.db');
     final databaseManager = DatabaseManager.getInstance();
     List<Entry> journalEntries = await databaseManager.journalEntries();
 

@@ -52,7 +52,6 @@ class DatabaseManager {
 
   Future<List<Entry>> journalEntries() async {
     final List<Map> journalRecords = await db.rawQuery(SQL_SELECT);
-    print(journalRecords);
 
     final journalEntries = journalRecords.map((record) {
       return Entry(
@@ -62,7 +61,6 @@ class DatabaseManager {
         date: DateTime.parse(record['date']),
       );
     }).toList();
-    print(journalEntries);
 
     return journalEntries;
   }

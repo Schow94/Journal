@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:project4/db/database_manager.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/add_entry_screen_arg.dart';
 import '../db/journal_entry_dto.dart';
@@ -37,8 +36,6 @@ class _AddEntryState extends State<AddEntry> {
 
   void initState() {
     super.initState();
-    // setTheme();
-    // loadTheme();
   }
 
   @override
@@ -179,36 +176,33 @@ class _AddEntryState extends State<AddEntry> {
         ),
       ),
       endDrawer: Drawer(
-        child: Container(
-          color: darkTheme ? Colors.grey : Colors.white,
-          child: ListView(
-            padding: const EdgeInsets.all(0),
-            children: [
-              const SizedBox(
-                height: 90.0,
-                child: DrawerHeader(
-                  decoration: BoxDecoration(
-                    color: Colors.green,
-                  ),
-                  child: Text('Settings'),
+        child: ListView(
+          padding: const EdgeInsets.all(0),
+          children: [
+            const SizedBox(
+              height: 90.0,
+              child: DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.green,
                 ),
+                child: Text('Settings'),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  const Text('Dark Mode'),
-                  Switch(
-                    value: darkTheme,
-                    onChanged: (value) {
-                      widget.setTheme();
-                    },
-                    // activeTrackColor: Colors.lightGreenAccent,
-                    // activeColor: Colors.green,
-                  ),
-                ],
-              ),
-            ],
-          ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                const Text('Dark Mode'),
+                Switch(
+                  value: darkTheme,
+                  onChanged: (value) {
+                    widget.setTheme();
+                  },
+                  // activeTrackColor: Colors.lightGreenAccent,
+                  // activeColor: Colors.green,
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -252,32 +246,10 @@ class _AddEntryState extends State<AddEntry> {
     - Initialzie dB
   */
   void initDb() async {
-    // await deleteDatabase('journal.db');
-
     // DB was initialized in main.dart
     // We get instance of db now
     final databaseManager = DatabaseManager.getInstance();
 
     databaseManager.saveJournalEntry(dto: journalEntryFields);
   }
-
-  // void setTheme() async {
-  //   setState(() {
-  //     // Toggle Theme from light to dark
-  //     darkTheme = darkTheme ? false : true;
-  //   });
-
-  //   final SharedPreferences preferences = await SharedPreferences.getInstance();
-  //   preferences.setBool(DARK_THEME, darkTheme);
-  //   // bool get dark => widget.preferences.getBool(DARK_THEME) ?? false;
-  // }
-
-  // void loadTheme() async {
-  //   final SharedPreferences preferences = await SharedPreferences.getInstance();
-  //   final dark = preferences.getBool(DARK_THEME);
-
-  //   setState(() {
-  //     darkTheme = dark! ? true : false;
-  //   });
-  // }
 }

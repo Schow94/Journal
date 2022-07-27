@@ -2,7 +2,7 @@
   Student: Stephen Chow
   Email: chowst@oregonstate.edu
   Course: CS492 - Mobile Software Development
-  Last Updated: 7/26/22
+  Last Updated: 7/27/22
 */
 
 import 'package:flutter/material.dart';
