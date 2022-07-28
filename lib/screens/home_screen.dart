@@ -1,27 +1,24 @@
 import 'package:flutter/material.dart';
-import '../db/database_manager.dart';
-import 'package:project4/models/add_entry_screen_arg.dart';
-
-import '../models/entry.dart';
-import '../widgets/horizontal_home.dart';
-import '../widgets/vertical_home.dart';
 
 import '../models/add_entry_screen_arg.dart';
+import '../models/entry.dart';
+import '../db/database_manager.dart';
+
+import '../widgets/horizontal_home.dart';
+import '../widgets/vertical_home.dart';
+import '../widgets/end_drawer.dart';
 
 class Home extends StatefulWidget {
-  VoidCallback setTheme;
+  final VoidCallback setTheme;
+  final bool darkTheme;
 
-  Home(this.setTheme);
+  Home(this.darkTheme, this.setTheme);
 
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  bool darkTheme = false;
-
-  static const DARK_THEME = 'dark';
-
   List<Entry> entries = [];
 
   void initState() {
@@ -60,40 +57,15 @@ class _HomeState extends State<Home> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           goToAddEntryScreen(
-              context, AddEntryScreenArguments(addEntry: addEntry));
+            context,
+            AddEntryScreenArguments(addEntry: addEntry),
+          );
         },
-        backgroundColor: darkTheme ? Colors.grey : Colors.green,
+        backgroundColor: widget.darkTheme ? Colors.grey : Colors.green,
         child: const Icon(Icons.add),
       ),
-      endDrawer: Drawer(
-        child: ListView(
-          padding: const EdgeInsets.all(0),
-          children: [
-            const SizedBox(
-              height: 90.0,
-              child: DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Colors.green,
-                ),
-                child: Text('Settings'),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                const Text('Dark Mode'),
-                Switch(
-                  value: darkTheme,
-                  onChanged: (value) {
-                    // Calling parent Widget's method from child
-                    widget.setTheme();
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
+      endDrawer:
+          EndDrawer(darkTheme: widget.darkTheme, setTheme: widget.setTheme),
     );
   }
 
@@ -112,13 +84,15 @@ class _HomeState extends State<Home> {
   */
   void addEntry(journalEntry) {
     setState(() {
-      //Do something
+      // Create new Entry instance
       Entry newEntry = Entry(
         title: journalEntry.title,
         body: journalEntry.body,
         date: DateTime.now(),
         rating: journalEntry.rating,
       );
+
+      // Add entry to entries list in state
       entries.add(newEntry);
     });
   }
@@ -130,7 +104,7 @@ class _HomeState extends State<Home> {
     final databaseManager = DatabaseManager.getInstance();
     List<Entry> journalEntries = await databaseManager.journalEntries();
 
-    // Update State
+    // Update State w/ journals from db
     setState(() {
       entries = journalEntries;
     });

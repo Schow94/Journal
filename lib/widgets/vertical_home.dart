@@ -3,9 +3,9 @@ import '../models/entry.dart';
 import '../widgets/journal_entries_list.dart';
 
 class VerticalHome extends StatelessWidget {
-  List<Entry> entries;
+  final List<Entry> entries;
 
-  VerticalHome({Key? key, required this.entries}) : super(key: key);
+  const VerticalHome({Key? key, required this.entries}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

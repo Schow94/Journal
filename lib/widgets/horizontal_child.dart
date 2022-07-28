@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import '../models/entry.dart';
 
 class HorizontalChild extends StatelessWidget {
-  Entry firstEntry;
+  final Entry firstEntry;
 
-  HorizontalChild({Key? key, required this.firstEntry}) : super(key: key);
+  const HorizontalChild({Key? key, required this.firstEntry}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

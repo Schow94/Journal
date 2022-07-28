@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:project4/widgets/end_drawer.dart';
 import '../models/screen_class.dart';
 import 'package:intl/intl.dart';
 
-class JournalEntryScreen extends StatelessWidget {
-  VoidCallback setTheme;
+import '../widgets/horizontal_entry_screen.dart';
+import '../widgets/vertical_entry_screen.dart';
 
-  JournalEntryScreen(this.setTheme);
+class JournalEntryScreen extends StatelessWidget {
+  final VoidCallback setTheme;
+  final bool darkTheme;
+
+  const JournalEntryScreen(this.darkTheme, this.setTheme);
 
   @override
   Widget build(BuildContext context) {
+    // Pull args off of ScreenArgs from Navigator
     final screenargs =
         ModalRoute.of(context)?.settings.arguments as ScreenArguments;
     final String title = screenargs.title;
@@ -25,6 +31,7 @@ class JournalEntryScreen extends StatelessWidget {
           builder: (BuildContext context) {
             return IconButton(
               onPressed: () {
+                // Navigate to previous screen
                 goBack(context);
               },
               icon: const Icon(Icons.arrow_back),
@@ -48,41 +55,24 @@ class JournalEntryScreen extends StatelessWidget {
       ),
       body: LayoutBuilder(builder: (context, constraints) {
         return constraints.maxWidth < 400
-            ? VerticalLayout(
-                title: title, date: date, body: body, rating: rating)
-            : HorizontalLayout(
-                title: title, date: date, body: body, rating: rating);
+            ? VerticalEntryScreen(
+                title: title,
+                date: date,
+                body: body,
+                rating: rating,
+                makeStars: makeStars(context, rating),
+              )
+            : HorizontalEntryScreen(
+                title: title,
+                date: date,
+                body: body,
+                rating: rating,
+                makeStars: makeStars(context, rating),
+              );
       }),
-      endDrawer: Drawer(
-        child: ListView(
-          padding: const EdgeInsets.all(0),
-          children: [
-            const SizedBox(
-              height: 90.0,
-              child: DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Colors.green,
-                ),
-                child: Text('Settings'),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                const Text('Dark Mode'),
-                Switch(
-                  onChanged: (value) {
-                    // Do something
-                    setTheme();
-                  },
-                  value: false,
-                  // activeTrackColor: Colors.lightGreenAccent,
-                  // activeColor: Colors.green,
-                ),
-              ],
-            ),
-          ],
-        ),
+      endDrawer: EndDrawer(
+        darkTheme: darkTheme,
+        setTheme: setTheme,
       ),
     );
   }
@@ -93,135 +83,11 @@ class JournalEntryScreen extends StatelessWidget {
   void goBack(context) {
     Navigator.pop(context);
   }
-}
-
-class VerticalLayout extends StatelessWidget {
-  final title;
-  final date;
-  final body;
-  final rating;
-
-  const VerticalLayout(
-      {Key? key, this.title, this.date, this.body, this.rating})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.all(20),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(title, style: Theme.of(context).textTheme.headline6),
-              ],
-            ),
-            makeStars(),
-            const SizedBox(height: 10),
-            const Divider(),
-            const SizedBox(height: 10),
-            Text(
-              body,
-              style: const TextStyle(
-                height: 1.5,
-              ),
-            ),
-            //Use ListBuilder() to dynamically render stars for ratings?
-          ],
-        ),
-      ),
-    );
-  }
 
   /*
     - Dynamically renders stars to represent rating
   */
-  Widget makeStars() {
-    // Hold stars
-    List<Widget> stars = [];
-
-    // Add filled stars
-    for (int i = 0; i < rating; i++) {
-      stars.add(
-        const Icon(Icons.star, color: Colors.green),
-      );
-    }
-
-    // Add emtpy stars
-    for (int i = 0; i < 4 - rating; i++) {
-      stars.add(
-        const Icon(Icons.star),
-      );
-    }
-
-    return Row(mainAxisAlignment: MainAxisAlignment.center, children: stars);
-  }
-}
-
-class HorizontalLayout extends StatelessWidget {
-  final title;
-  final date;
-  final body;
-  final rating;
-
-  const HorizontalLayout(
-      {Key? key, this.title, this.date, this.body, this.rating})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.all(20),
-      // width: MediaQuery.of(context).size.width * 1,
-      height: MediaQuery.of(context).size.height * 1,
-      child: SingleChildScrollView(
-        child: Container(
-          height: MediaQuery.of(context).size.height * 0.8,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                height: MediaQuery.of(context).size.height * 0.8,
-                width: MediaQuery.of(context).size.width * 0.35,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      title,
-                      style: Theme.of(context).textTheme.headline5,
-                    ),
-                    makeStars(),
-                  ],
-                ),
-              ),
-              const VerticalDivider(
-                width: 20,
-                thickness: 1,
-                indent: 20,
-                endIndent: 0,
-                color: Color.fromARGB(255, 224, 224, 224),
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width * 0.55,
-                child: Text(body),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  /*
-    - Dynamically renders stars to represent rating
-  */
-  Widget makeStars() {
+  Widget makeStars(BuildContext context, int rating) {
     // Hold stars
     List<Widget> stars = [];
 

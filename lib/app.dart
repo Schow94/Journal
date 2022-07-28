@@ -9,8 +9,6 @@ class App extends StatefulWidget {
   bool darkTheme;
   late SharedPreferences prefs;
 
-  // final SharedPreferences preferences;
-
   App(this.darkTheme, prefs);
 
   @override
@@ -28,17 +26,20 @@ class _AppState extends State<App> {
           headline6: TextStyle(fontSize: 17.0),
         ),
       ),
-      darkTheme: ThemeData(
-          brightness: Brightness.dark, primarySwatch: Colors.deepPurple),
+      darkTheme: ThemeData(brightness: Brightness.dark),
       themeMode: widget.darkTheme ? ThemeMode.dark : ThemeMode.light,
       routes: {
-        '/': (context) => Home(setTheme),
+        '/': (context) => Home(widget.darkTheme, setTheme),
         'addentry': (context) => AddEntry(setTheme),
-        'journalentry': (context) => JournalEntryScreen(setTheme),
+        'journalentry': (context) =>
+            JournalEntryScreen(widget.darkTheme, setTheme),
       },
     );
   }
 
+  /*
+    - Toggles theme from light --> dark or vice versa
+  */
   void setTheme() async {
     setState(() {
       // Toggle Theme from light to dark

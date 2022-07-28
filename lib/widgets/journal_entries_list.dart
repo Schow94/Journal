@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+
 import '../models/screen_class.dart';
 import '../models/entry.dart';
-import 'dart:core';
-import 'package:intl/intl.dart';
+
+import '../widgets/list_item.dart';
 
 class JournalEntriesList extends StatelessWidget {
   final List<Entry> entries;
@@ -19,8 +20,10 @@ class JournalEntriesList extends StatelessWidget {
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
+              // Go to journal_entry_screen
               goToJournalEntry(
                 context,
+                // Pass Entry as args to Navigator
                 ScreenArguments(
                   title: entries[index].title,
                   body: entries[index].body,
@@ -29,15 +32,9 @@ class JournalEntriesList extends StatelessWidget {
                 ),
               );
             },
-            child: Card(
-              child: ListTile(
-                leading: const Icon(Icons.book_outlined),
-                trailing: const Icon(Icons.more_vert),
-                title: Text(entries[index].title),
-                subtitle: Text(
-                  DateFormat('yyy-MM-dd').format(entries[index].date),
-                ),
-              ),
+            child: ListItem(
+              title: entries[index].title,
+              date: entries[index].date,
             ),
           );
         },
