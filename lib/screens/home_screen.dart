@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import '../db/database_manager.dart';
 import 'package:project4/models/add_entry_screen_arg.dart';
 
-import '../widgets/journal_entries_list.dart';
 import '../models/entry.dart';
+import '../widgets/horizontal_home.dart';
+import '../widgets/vertical_home.dart';
 
 import '../models/add_entry_screen_arg.dart';
 
@@ -133,88 +134,5 @@ class _HomeState extends State<Home> {
     setState(() {
       entries = journalEntries;
     });
-  }
-}
-
-class VerticalHome extends StatelessWidget {
-  List<Entry> entries;
-
-  VerticalHome({Key? key, required this.entries}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      // height: MediaQuery.of(context).size.height * 0.8,
-      child: Center(
-        child: entries.isNotEmpty
-            ? JournalEntriesList(entries: entries)
-            : const Icon(Icons.book, size: 90.0),
-      ),
-    );
-  }
-}
-
-class HorizontalHome extends StatelessWidget {
-  List<Entry> entries;
-
-  HorizontalHome({Key? key, required this.entries}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Flexible(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: entries.isNotEmpty
-                ? JournalEntriesList(entries: entries)
-                : const Icon(Icons.book, size: 90.0),
-          ),
-        ),
-        const VerticalDivider(
-          width: 20,
-          thickness: 1,
-          indent: 20,
-          endIndent: 0,
-          color: Color.fromARGB(255, 224, 224, 224),
-        ),
-        Container(
-          width: MediaQuery.of(context).size.width * 0.45,
-          child: Center(
-            child: HorizontalChild(
-              firstEntry: entries.isNotEmpty
-                  ? entries.first
-                  : Entry(
-                      title: 'Test',
-                      body: 'Test',
-                      rating: 1,
-                      date: DateTime.now(),
-                    ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class HorizontalChild extends StatelessWidget {
-  Entry firstEntry;
-
-  HorizontalChild({Key? key, required this.firstEntry}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          firstEntry.title,
-          style: Theme.of(context).textTheme.headline4,
-        ),
-        Text(firstEntry.body),
-      ],
-    );
   }
 }
