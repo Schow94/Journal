@@ -1,14 +1,14 @@
 import 'package:sqflite/sqflite.dart';
 import 'journal_entry_dto.dart';
 import '../models/entry.dart';
+import 'package:flutter/services.dart';
 
 class DatabaseManager {
   static const String DATABASE_FILENAME = 'journals_2.db';
-  static const String SQL_CREATE_SCHEMA =
-      'CREATE TABLE IF NOT EXISTS journal_entries(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, body TEXT, rating INTEGER, date DATETIME)';
   static const String SQL_INSERT =
       'INSERT INTO journal_entries(title, body, rating, date) VALUES (?, ?, ?, ?)';
   static const String SQL_SELECT = 'SELECT * FROM journal_entries';
+  static var SQL_CREATE_FILE = 'assets/sql_schema.txt';
 
   // Singleton db instance
   static DatabaseManager _instance = DatabaseManager._();
@@ -23,6 +23,7 @@ class DatabaseManager {
   }
 
   static Future initialize() async {
+    String SQL_CREATE_SCHEMA = await rootBundle.loadString(SQL_CREATE_FILE);
     final db = await openDatabase(DATABASE_FILENAME, version: 1,
         onCreate: (Database db, int version) async {
       createTables(db, SQL_CREATE_SCHEMA);

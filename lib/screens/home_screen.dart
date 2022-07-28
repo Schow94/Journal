@@ -51,6 +51,11 @@ class _HomeState extends State<Home> {
           ),
         ],
       ),
+      body: LayoutBuilder(builder: (context, constraints) {
+        return constraints.maxWidth < 600
+            ? VerticalHome(entries: entries)
+            : HorizontalHome(entries: entries);
+      }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           goToAddEntryScreen(
@@ -58,13 +63,6 @@ class _HomeState extends State<Home> {
         },
         backgroundColor: darkTheme ? Colors.grey : Colors.green,
         child: const Icon(Icons.add),
-      ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: entries.isNotEmpty
-              ? JournalEntriesList(entries: entries)
-              : const Icon(Icons.book, size: 90.0),
-        ),
       ),
       endDrawer: Drawer(
         child: ListView(
@@ -89,8 +87,6 @@ class _HomeState extends State<Home> {
                     // Calling parent Widget's method from child
                     widget.setTheme();
                   },
-                  // activeTrackColor: Colors.lightGreenAccent,
-                  // activeColor: Colors.green,
                 ),
               ],
             ),
@@ -126,7 +122,9 @@ class _HomeState extends State<Home> {
     });
   }
 
-  // Load journal entries from db when component mounts
+  /*
+    - Load journal entries from db when component mounts
+  */
   void loadJournal() async {
     final databaseManager = DatabaseManager.getInstance();
     List<Entry> journalEntries = await databaseManager.journalEntries();
@@ -135,5 +133,88 @@ class _HomeState extends State<Home> {
     setState(() {
       entries = journalEntries;
     });
+  }
+}
+
+class VerticalHome extends StatelessWidget {
+  List<Entry> entries;
+
+  VerticalHome({Key? key, required this.entries}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      // height: MediaQuery.of(context).size.height * 0.8,
+      child: Center(
+        child: entries.isNotEmpty
+            ? JournalEntriesList(entries: entries)
+            : const Icon(Icons.book, size: 90.0),
+      ),
+    );
+  }
+}
+
+class HorizontalHome extends StatelessWidget {
+  List<Entry> entries;
+
+  HorizontalHome({Key? key, required this.entries}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Flexible(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: entries.isNotEmpty
+                ? JournalEntriesList(entries: entries)
+                : const Icon(Icons.book, size: 90.0),
+          ),
+        ),
+        const VerticalDivider(
+          width: 20,
+          thickness: 1,
+          indent: 20,
+          endIndent: 0,
+          color: Color.fromARGB(255, 224, 224, 224),
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width * 0.45,
+          child: Center(
+            child: HorizontalChild(
+              firstEntry: entries.isNotEmpty
+                  ? entries.first
+                  : Entry(
+                      title: 'Test',
+                      body: 'Test',
+                      rating: 1,
+                      date: DateTime.now(),
+                    ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class HorizontalChild extends StatelessWidget {
+  Entry firstEntry;
+
+  HorizontalChild({Key? key, required this.firstEntry}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          firstEntry.title,
+          style: Theme.of(context).textTheme.headline4,
+        ),
+        Text(firstEntry.body),
+      ],
+    );
   }
 }

@@ -13,9 +13,8 @@ class JournalEntriesList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height * 1,
-      // color: Colors.blue,
-      // margin: const EdgeInsets.all(10),
       child: ListView.builder(
+        shrinkWrap: true,
         itemCount: entries.length,
         itemBuilder: (context, index) {
           return GestureDetector(
