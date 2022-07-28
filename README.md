@@ -9,3 +9,5 @@ Demonstrate proficiency of prior material, and challenge yourself to demonstrate
 ## What the application does
 
 Implement an application that allows user to create journal entries and peruse through a list of entries or view a specific entry. Application also has a dark theme that can be toggled. Application built with daptive and repsonsive design in mind (works with any screen orientation).
+
+![Week 0708 Project 03 Example (1)](https://user-images.githubusercontent.com/24352472/181588209-309efdc7-8695-4632-8d08-e1351fb5c419.gif)
