@@ -1,5 +1,8 @@
 import 'dart:core';
 
+/*
+  - Class to help pass Entry as a Navigator arg
+*/
 class ScreenArguments {
   final String title;
   final String body;

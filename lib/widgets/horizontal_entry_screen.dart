@@ -20,7 +20,6 @@ class HorizontalEntryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.all(20),
-      // width: MediaQuery.of(context).size.width * 1,
       height: MediaQuery.of(context).size.height * 1,
       child: SingleChildScrollView(
         child: Container(
@@ -40,6 +39,7 @@ class HorizontalEntryScreen extends StatelessWidget {
                       title,
                       style: Theme.of(context).textTheme.headline5,
                     ),
+                    // Row of stars
                     makeStars,
                   ],
                 ),

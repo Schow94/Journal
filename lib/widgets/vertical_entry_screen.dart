@@ -31,6 +31,7 @@ class VerticalEntryScreen extends StatelessWidget {
                 Text(title, style: Theme.of(context).textTheme.headline6),
               ],
             ),
+            // Row of stars
             makeStars,
             const SizedBox(height: 10),
             const Divider(),

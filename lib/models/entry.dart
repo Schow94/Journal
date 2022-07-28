@@ -1,4 +1,6 @@
-// Model for how a JournalEntry should look
+/*
+  - Journal Entry
+*/
 class Entry {
   final String title;
   final String body;

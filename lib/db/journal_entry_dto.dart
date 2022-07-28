@@ -1,3 +1,6 @@
+/*
+  - Data Transfer Object for Journal Entry
+*/
 class JournalEntryDTO {
   String title = '';
   String body = '';

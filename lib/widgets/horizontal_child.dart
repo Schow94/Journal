@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../models/entry.dart';
 
 class HorizontalChild extends StatelessWidget {
