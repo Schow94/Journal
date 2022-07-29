@@ -4,6 +4,8 @@ import 'package:project4/db/database_manager.dart';
 import '../models/add_entry_screen_arg.dart';
 import '../db/journal_entry_dto.dart';
 
+import '../widgets/end_drawer.dart';
+
 class JournalEntryFields {
   String title = '';
   String body = '';
@@ -17,8 +19,9 @@ class JournalEntryFields {
 
 class AddEntry extends StatefulWidget {
   VoidCallback setTheme;
+  final bool darkTheme;
 
-  AddEntry(this.setTheme);
+  AddEntry(this.darkTheme, this.setTheme);
 
   @override
   State<AddEntry> createState() => _AddEntryState();
@@ -26,8 +29,6 @@ class AddEntry extends StatefulWidget {
 
 class _AddEntryState extends State<AddEntry> {
   final formKey = GlobalKey<FormState>();
-  // final journalEntryFields = JournalEntryFields();
-
   final journalEntryFields = JournalEntryDTO();
 
   bool darkTheme = false;
@@ -40,7 +41,6 @@ class _AddEntryState extends State<AddEntry> {
 
   @override
   Widget build(BuildContext context) {
-    // Might be able to use  JournalEntry as ScreenArguments
     final screenargs =
         ModalRoute.of(context)?.settings.arguments as AddEntryScreenArguments;
     final void Function(dynamic) addEntry = screenargs.addEntry;
@@ -159,10 +159,6 @@ class _AddEntryState extends State<AddEntry> {
                         if (formKey.currentState!.validate()) {
                           // Stores textfields values in DTO
                           formKey.currentState!.save();
-                          // Save to db here
-                          // Database.of(context).saveJournalEntry(journalEntryFields);
-
-                          // print(journalEntryFields);
                           addEntry(journalEntryFields);
                           saveEntry(context);
                         }
@@ -175,36 +171,8 @@ class _AddEntryState extends State<AddEntry> {
           ),
         ),
       ),
-      endDrawer: Drawer(
-        child: ListView(
-          padding: const EdgeInsets.all(0),
-          children: [
-            const SizedBox(
-              height: 90.0,
-              child: DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Colors.green,
-                ),
-                child: Text('Settings'),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                const Text('Dark Mode'),
-                Switch(
-                  value: darkTheme,
-                  onChanged: (value) {
-                    widget.setTheme();
-                  },
-                  // activeTrackColor: Colors.lightGreenAccent,
-                  // activeColor: Colors.green,
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
+      endDrawer:
+          EndDrawer(darkTheme: widget.darkTheme, setTheme: widget.setTheme),
     );
   }
 

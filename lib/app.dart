@@ -30,7 +30,7 @@ class _AppState extends State<App> {
       themeMode: widget.darkTheme ? ThemeMode.dark : ThemeMode.light,
       routes: {
         '/': (context) => Home(widget.darkTheme, setTheme),
-        'addentry': (context) => AddEntry(setTheme),
+        'addentry': (context) => AddEntry(widget.darkTheme, setTheme),
         'journalentry': (context) =>
             JournalEntryScreen(widget.darkTheme, setTheme),
       },
