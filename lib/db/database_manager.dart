@@ -6,7 +6,7 @@ import 'journal_entry_dto.dart';
 
 class DatabaseManager {
   // ----------------------------------- CONSTANTS -----------------------------------
-  static const String DATABASE_FILENAME = 'journals_2.db';
+  static const String DATABASE_FILENAME = 'journal.sqlite3.db';
   static const String SQL_INSERT =
       'INSERT INTO journal_entries(title, body, rating, date) VALUES (?, ?, ?, ?)';
   static const String SQL_SELECT = 'SELECT * FROM journal_entries';
