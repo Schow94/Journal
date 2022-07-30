@@ -5,6 +5,7 @@ import '../models/add_entry_screen_arg.dart';
 import '../db/journal_entry_dto.dart';
 
 import '../widgets/end_drawer.dart';
+import '../widgets/drop_down.dart';
 
 class JournalEntryFields {
   String title = '';
@@ -119,26 +120,7 @@ class _AddEntryState extends State<AddEntry> {
                     }
                   },
                 ),
-                TextFormField(
-                  autofocus: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Rating',
-                    border: OutlineInputBorder(),
-                  ),
-                  onSaved: (value) {
-                    // Save value in state
-                    journalEntryFields.rating = int.parse(value!);
-                  },
-                  validator: (String? value) {
-                    if (value!.isEmpty ||
-                        int.parse(value) < 1 ||
-                        int.parse(value) > 4) {
-                      return 'Please enter a rating between 1 and 4';
-                    } else {
-                      return null;
-                    }
-                  },
-                ),
+                DropdownRatingFormField(maxRating: 4, onSaved: saveRating),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -219,5 +201,13 @@ class _AddEntryState extends State<AddEntry> {
     final databaseManager = DatabaseManager.getInstance();
 
     databaseManager.saveJournalEntry(dto: journalEntryFields);
+  }
+
+  /*
+    - Save rating
+  */
+  void saveRating(value) {
+    // Save value in state
+    journalEntryFields.rating = value!;
   }
 }
